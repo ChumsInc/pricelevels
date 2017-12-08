@@ -1,0 +1,94 @@
+$border-color: #666;
+
+ul.nav.nav-tabs {
+  margin-bottom: 10px;
+}
+
+div.top-bar {
+  h3,
+  button {
+    margin-right: 10px;
+    display: inline-block;
+  }
+}
+
+.table {
+
+  &.sticky {
+    thead tr:nth-child(1) th {
+      position: sticky;
+      top: 0;
+      background-color: rgba(225,225,225,0.9);
+      z-index: 10;
+    }
+  }
+
+  th.right,
+  td.right {
+    text-align: right;
+  }
+
+  td.border-left {
+    border-left: 1px solid #ddd;
+  }
+
+  tbody.step,
+  tbody.employee {
+
+    tr {
+      &:first-of-type {
+        td {
+          border-bottom: 1px solid $border-color;
+        }
+      }
+
+      &.total {
+        td {
+          font-weight: bold;
+          border-top: 1px solid $border-color;
+        }
+      }
+      th {
+        border-bottom: 1px solid $border-color;
+      }
+    }
+  }
+}
+
+.form-inline {
+  .date-picker {
+    display: inline-block;
+  }
+}
+
+.input-autocomplete {
+  position: relative;
+  .form-control + .dropdown-menu {
+    font-size: .875rem;
+    padding: .25rem;
+    width: 100%;
+    right: 0;
+
+    .dropdown-item.row {
+      display: flex;
+      padding: .25rem 0;
+      div {
+        overflow: hidden;
+      }
+    }
+  }
+  .form-control-sm + .dropdown-menu {
+    font-size: .75rem;
+  }
+  .form-control-lg + .dropdown-menu {
+    font-size: 1rem;
+  }
+}
+
+.price-level-edit {
+  input[type="text"],
+  input[type="number"] {
+    width: 8em;
+  }
+}
+

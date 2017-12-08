@@ -1,0 +1,48 @@
+.datePicker input[type="text"] {
+  cursor: pointer; }
+
+.datePicker .cell, .datePicker .monthSelector, .datePicker .monthName, .datePicker .dayName, .datePicker .dayContainer {
+  text-align: center;
+  cursor: pointer;
+  width: 14.28571%; }
+
+.datePicker .monthSelector {
+  flex-grow: 1; }
+
+.datePicker .monthName {
+  flex-grow: 2; }
+
+.datePicker .dayName {
+  margin-top: 10px;
+  color: black;
+  font-size: smaller;
+  cursor: inherit;
+  text-align: center; }
+
+.datePicker .dayContainer .day {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border: 1px solid transparent;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  color: #868e96; }
+  .datePicker .dayContainer .day:hover {
+    color: #000;
+    border-color: #007bff; }
+  .datePicker .dayContainer .day.inMonth {
+    color: #000; }
+    .datePicker .dayContainer .day.inMonth.day-0, .datePicker .dayContainer .day.inMonth.day-6 {
+      color: #ced4da; }
+  .datePicker .dayContainer .day.today {
+    color: white;
+    background-color: #17a2b8; }
+  .datePicker .dayContainer .day.selected {
+    color: white !important;
+    background-color: #007bff !important; }
+  .datePicker .dayContainer .day.disabled {
+    cursor: not-allowed;
+    color: #ced4da; }
+    .datePicker .dayContainer .day.disabled:hover {
+      border-color: #ffc107; }
+
+/*# sourceMappingURL=datepicker.css.map */

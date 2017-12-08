@@ -1,0 +1,81 @@
+@CHARSET "ISO-8859-1";
+
+.sending {
+    color: #ccc;
+}
+
+.error {
+    color: #f00;
+}
+
+thead th.sortable {
+    cursor: pointer;
+}
+
+.salesreport td {
+    white-space: nowrap;
+    padding: 5px;
+}
+
+
+#alloc-so-detail td.line-seq-no
+{
+    font-size: 1px;
+}
+
+#alloc-so-detail input[type="text"] {
+    width: 5em;
+    text-align: right;
+}
+
+#to-allocate-form,
+#to-allocate-search,
+#allocated-form,
+#allocated-search {
+    display: inline-block;
+}
+
+.table-container {
+    overflow: auto;
+    max-height: 500px;
+}
+
+table.salesreport td.comment {
+    white-space: normal;
+}
+
+tr.not-allocated {
+    color: #000;
+}
+tr.alloc-failed {
+    background-color: #f00;
+    color: #ff0;
+}
+tr.alloc-partial {
+    color: #ff0088;
+}
+tr.alloc-complete {
+    color: #00f;
+}
+tr.short {
+    color: #f00;
+}
+tr.processing {
+    color: #0000aa;
+    font-style: italic;
+    background-color: #aaf;
+}
+
+#status-box {
+    height: 50px;
+    overflow: auto;
+    white-space: normal;
+    margin-bottom: 5px;
+}
+
+#status-box .status {
+    padding: 0 3px;
+    font-size: 10px;
+    margin-bottom: 2px;
+    border-bottom: 1px solid #ddd;
+}

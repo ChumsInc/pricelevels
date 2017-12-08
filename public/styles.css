@@ -1,0 +1,59 @@
+ul.nav.nav-tabs {
+  margin-bottom: 10px; }
+
+div.top-bar h3,
+div.top-bar button {
+  margin-right: 10px;
+  display: inline-block; }
+
+.table.sticky thead tr:nth-child(1) th {
+  position: sticky;
+  top: 0;
+  background-color: rgba(225, 225, 225, 0.9);
+  z-index: 10; }
+
+.table th.right,
+.table td.right {
+  text-align: right; }
+
+.table td.border-left {
+  border-left: 1px solid #ddd; }
+
+.table tbody.step tr:first-of-type td,
+.table tbody.employee tr:first-of-type td {
+  border-bottom: 1px solid #666; }
+
+.table tbody.step tr.total td,
+.table tbody.employee tr.total td {
+  font-weight: bold;
+  border-top: 1px solid #666; }
+
+.table tbody.step tr th,
+.table tbody.employee tr th {
+  border-bottom: 1px solid #666; }
+
+.form-inline .date-picker {
+  display: inline-block; }
+
+.input-autocomplete {
+  position: relative; }
+  .input-autocomplete .form-control + .dropdown-menu {
+    font-size: .875rem;
+    padding: .25rem;
+    width: 100%;
+    right: 0; }
+    .input-autocomplete .form-control + .dropdown-menu .dropdown-item.row {
+      display: flex;
+      padding: .25rem 0; }
+      .input-autocomplete .form-control + .dropdown-menu .dropdown-item.row div {
+        overflow: hidden; }
+  .input-autocomplete .form-control-sm + .dropdown-menu {
+    font-size: .75rem; }
+  .input-autocomplete .form-control-lg + .dropdown-menu {
+    font-size: 1rem; }
+
+.price-level-edit input[type="text"],
+.price-level-edit input[type="number"] {
+  width: 8em; }
+
+/*# sourceMappingURL=styles.css.map */
