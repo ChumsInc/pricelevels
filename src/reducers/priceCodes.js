@@ -8,16 +8,7 @@ import {
     LOAD_PRICECODE_LEVELS_FAILURE,
     LOAD_PRICECODE_CHANGES_FAILURE, RECEIVE_PRICECODE_CHANGES, RECEIVE_PRICELEVEL_CHANGES, LOAD_PRICELEVELS_FAILURE,
     LOAD_PRICELEVELS, RECEIVE_PRICELEVELS, LOAD_PRICECODE_CHANGES
-} from "../actions/priceCodes";
-
-const company = (state = 'CHI', action) => {
-    switch (action.type) {
-    case SET_COMPANY:
-        return action.company;
-    default:
-        return state;
-    }
-};
+} from "../constants/App";
 
 const list = (state = {}, action) => {
     switch (action.type) {
@@ -100,26 +91,8 @@ const levelList = (state = {}, action) => {
     }
 };
 
-const errors = (state = [], action) => {
-    const errors = [...state];
-    switch (action.type) {
-    case LOAD_PRICECODE_LEVELS_FAILURE:
-    case LOAD_LIST_FAILURE:
-    case LOAD_PRICELEVEL_ITEMS_FAILURE:
-    case LOAD_PRICELEVEL_FAILURE:
-    case SAVE_PRICELEVEL_FAILURE:
-    case LOAD_PRICECODE_CHANGES_FAILURE:
-        return [...errors, `${action.type}: ${action.message}`];
 
-    case CLEAR_ERROR:
-        return [...errors.filter((err, index) => index !== action.index)];
-
-    default:
-        return state;
-    }
-};
-
-const priceLevel = (state = '', action) => {
+const priceLevel = (state = '-', action) => {
     switch (action.type) {
     case SET_PRICELEVEL:
         return action.level;
@@ -187,7 +160,7 @@ const priceCodeLevels = (state = {}, action) => {
         });
         return {...priceCodeLevels};
     case SAVE_PRICELEVEL_SUCCESS:
-        const {priceCode} = action
+        const {priceCode} = action;
         priceCodeLevels[priceCode.CustomerPriceLevel] = priceCode;
         return {...priceCodeLevels};
     default:
@@ -196,13 +169,11 @@ const priceCodeLevels = (state = {}, action) => {
 };
 
 export default combineReducers({
-    company,
     list,
     levels,
     loading,
     loadingItems,
     levelList,
-    errors,
     priceLevel,
     selected,
     items,

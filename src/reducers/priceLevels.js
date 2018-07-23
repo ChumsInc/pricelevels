@@ -6,16 +6,7 @@ import {
     LOAD_PRICELEVEL, LOAD_PRICELEVEL_FAILURE, SAVE_PRICELEVEL_SUCCESS, SET_NEW_DISCOUNT_MARKUP,
     SAVE_PRICELEVEL, SAVE_PRICELEVEL_FAILURE, LOAD_PRICECODE_LEVELS, RECEIVE_PRICECODE_LEVELS,
     LOAD_PRICECODE_LEVELS_FAILURE, RECEIVE_NEW_PRICECODE_DISCOUNTS, RECEIVE_NEW_PRICELEVEL_DISCOUNTS
-} from "../actions/priceCodes";
-
-const company = (state = 'CHI', action) => {
-    switch (action.type) {
-    case SET_COMPANY:
-        return action.company;
-    default:
-        return state;
-    }
-};
+} from "../constants/App";
 
 const list = (state = [], action) => {
     switch (action.type) {
@@ -88,23 +79,6 @@ const levelList = (state = [], action) => {
     }
 };
 
-const error = (state = null, action) => {
-    switch (action.type) {
-    case LOAD_PRICECODE_LEVELS_FAILURE:
-    case LOAD_LIST_FAILURE:
-    case LOAD_PRICELEVEL_ITEMS_FAILURE:
-    case LOAD_PRICELEVEL_FAILURE:
-    case SAVE_PRICELEVEL_FAILURE:
-        return action.message;
-
-    case CLEAR_ERROR:
-        return null;
-
-    default:
-        return state;
-    }
-};
-
 const priceLevel = (state = '', action) => {
     switch (action.type) {
     case SET_PRICELEVEL:
@@ -166,12 +140,10 @@ const priceCodeLevels = (state = [], action) => {
 };
 
 export default combineReducers({
-    company,
     list,
     loading,
     loadingItems,
     levelList,
-    error,
     priceLevel,
     selected,
     items,

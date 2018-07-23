@@ -9,13 +9,13 @@ import PriceCodesTable from './PriceCodesTable'
 import PriceCodeItems from './PriceCodeItems'
 import ProgressBar from './ProgressBar';
 import classNames from 'classnames';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import {
-    clearError,
-    fetchPriceCodes, fetchPriceLevel, selectPriceCode, setCompany, setNewDiscountMarkup, setPriceLevel
+    fetchPriceCodes, fetchPriceLevel, selectPriceCode, setNewDiscountMarkup, setPriceLevel
 } from "../actions/priceCodes";
-import DismissableAlert from "./DismissableAlert";
+
+import {setCompany} from "../actions/AppActions";
 
 
 class PriceCodes extends Component {
@@ -23,7 +23,6 @@ class PriceCodes extends Component {
         dispatch: PropTypes.func.isRequired,
         company: PropTypes.string.isRequired,
         list: PropTypes.object.isRequired,
-        error: PropTypes.string,
         levelList: PropTypes.object.isRequired,
         loading: PropTypes.bool,
         priceLevel: PropTypes.string.isRequired,
@@ -37,10 +36,6 @@ class PriceCodes extends Component {
             filter: '',
             filterChanged: false,
         };
-    }
-
-    componentDidMount() {
-        this.loadPriceCodes();
     }
 
     changeCompany(company) {
@@ -78,22 +73,13 @@ class PriceCodes extends Component {
         this.props.dispatch(setNewDiscountMarkup(val));
     }
 
-    onDismissError(index) {
-        this.props.dispatch(clearError(index));
-    }
 
     render() {
         const {company, loading, priceLevel, errors, levelList, loadingItems, levels, items} = this.props;
         const {filterChanged, filter} = this.state;
-        const alerts = errors.map((error, index) => {
-            return (
-                <DismissableAlert key={index} message={error} onDismiss={this.onDismissError.bind(this, index)}/>
-            )
-        });
         return (
             <div className={classNames({loading}, "row")}>
                 <div className="col-md-6">
-                    {alerts}
                     <form className ="form-inline form-group" onSubmit={(ev) => {ev.preventDefault()}}>
                         <CompanySelect value={company} onChange={::this.changeCompany}/>
                         <PriceLevelSelect company={company}
@@ -130,8 +116,9 @@ class PriceCodes extends Component {
 }
 
 const mapStateToProps = state => {
-    const { company, loading, list, levelList, errors, priceLevel, items, selected, loadingItems, levels } = state.priceCodes;
-    return { company, loading, list, levelList, errors, priceLevel, items, selected, loadingItems, levels };
+    const { company, priceCodes } = state;
+    const { loading, list, levelList, priceLevel, items, selected, loadingItems, levels } = priceCodes;
+    return { company, loading, list, levelList, priceLevel, items, selected, loadingItems, levels };
 };
 
 export default connect(mapStateToProps)(PriceCodes);

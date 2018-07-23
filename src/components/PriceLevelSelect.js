@@ -35,7 +35,7 @@ export default class PriceLevelSelect extends React.Component {
 
         return (
             <select className="form-control form-control-sm" onChange={::this.onChange} value={value}>
-                <option key="null" value="null">: No Discount</option>
+                <option key="-" value="-">: No Discount</option>
                 {options}
             </select>
         );

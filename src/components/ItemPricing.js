@@ -10,12 +10,11 @@ import PriceLevelSelect from './PriceLevelSelect';
 import {priceCalc} from '../utils';
 import {connect} from 'react-redux';
 import {
-    clearError,
-    fetchPriceCodes, savePriceCodeChanges, selectPriceCode, setCompany, setNewPriceCodeLevelsDiscount, setPriceLevel
+    fetchPriceCodes, savePriceCodeChanges, selectPriceCode, setNewPriceCodeLevelsDiscount, setPriceLevel
 } from "../actions/priceCodes";
 import numeral from 'numeral';
 import ProgressBar from "../components/ProgressBar";
-import DismissableAlert from "./DismissableAlert";
+import {setCompany} from "../actions/AppActions";
 
 class ItemPricing extends React.Component {
     constructor() {
@@ -29,7 +28,7 @@ class ItemPricing extends React.Component {
     }
 
     componentDidMount() {
-        this.loadPriceCodes();
+        // this.loadPriceCodes();
     }
 
     changeCompany(company) {
@@ -88,10 +87,6 @@ class ItemPricing extends React.Component {
     onSaveChanges(ev) {
         ev.preventDefault();
         this.props.dispatch(savePriceCodeChanges());
-    }
-
-    onDismissError(index) {
-        this.props.dispatch(clearError(index));
     }
 
     renderTable() {
@@ -195,19 +190,12 @@ class ItemPricing extends React.Component {
     }
 
     render() {
-        const {company, list, selected, levels, priceLevel, loading, errors } = this.props;
+        const {company, list, selected, levels, priceLevel, loading } = this.props;
         const {selectedItem, fromPrice} = this.state;
-
-        const alerts = errors.map((error, index) => {
-            return (
-                <DismissableAlert key={index} message={error} onDismiss={this.onDismissError.bind(this, index)}/>
-            )
-        });
 
         const table = this.renderTable();
         return (
             <div>
-                {alerts}
                 <form className="form-inline" onSubmit={::this.handleSubmit}>
                     <div className="form-group mx-sm-1">
                         <CompanySelect value={company} onChange={::this.changeCompany} />
@@ -249,8 +237,9 @@ class ItemPricing extends React.Component {
 
 
 const mapStateToProps = state => {
-    const { company, list, selected, levels, priceLevel, priceCodeLevels, errors, loading, items, loadingItems, } = state.priceCodes;
-    return { company, loading, list, errors, priceLevel, items, selected, loadingItems, priceCodeLevels, levels };
+    const { company, priceCodes } = state;
+    const { list, selected, levels, priceLevel, priceCodeLevels, loading, items, loadingItems, } = priceCodes;
+    return { company, loading, list, priceLevel, items, selected, loadingItems, priceCodeLevels, levels };
 };
 
 export default connect(mapStateToProps)(ItemPricing);

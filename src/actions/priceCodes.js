@@ -1,6 +1,24 @@
 import {fetchGET, fetchPOST, fetchDELETE} from '../chums/fetch';
 import fetch from "../fetch";
 import {fetchOptions} from "../utils";
+import {
+    LOAD_LIST,
+    LOAD_LIST_FAILURE, LOAD_PRICECODE_CHANGES,
+    LOAD_PRICECODE_CHANGES_FAILURE, LOAD_PRICECODE_LEVELS, LOAD_PRICECODE_LEVELS_FAILURE,
+    LOAD_PRICELEVEL, LOAD_PRICELEVEL_CHANGES, LOAD_PRICELEVEL_CHANGES_FAILURE,
+    LOAD_PRICELEVEL_FAILURE,
+    LOAD_PRICELEVEL_ITEMS,
+    LOAD_PRICELEVEL_ITEMS_FAILURE,
+    LOAD_PRICELEVELS, LOAD_PRICELEVELS_FAILURE,
+    RECEIVE_LIST,
+    RECEIVE_PRICECODE_CHANGES, RECEIVE_PRICECODE_LEVELS,
+    RECEIVE_PRICELEVEL, RECEIVE_PRICELEVEL_CHANGES,
+    RECEIVE_PRICELEVEL_ITEMS,
+    RECEIVE_PRICELEVELS, SAVE_PRICELEVEL, SAVE_PRICELEVEL_FAILURE, SAVE_PRICELEVEL_SUCCESS,
+    SET_NEW_DISCOUNT_MARKUP,
+    SET_PRICECODE,
+    SET_PRICELEVEL
+} from "../constants/App";
 
 const defaultPriceCode = {
     PriceCodeRecord: '0',
@@ -12,50 +30,7 @@ const defaultPriceCode = {
     DiscountMarkup1: 0,
     newDiscountMarkup: null,
 };
-export const SET_COMPANY = 'SET_COMPANY';
-export const SET_PRICELEVEL = 'SET_PRICELEVEL';
-export const SET_PRICECODE = 'SET_PRICECODE';
-export const SET_NEW_DISCOUNT_MARKUP = 'SET_NEW_DISCOUNT_MARKUP';
-export const CLEAR_ERROR = 'CLEAR_ERROR';
 
-export const LOAD_LIST = 'LOAD_LIST';
-export const LOAD_LIST_FAILURE = 'LOAD_LIST_FAILURE';
-export const RECEIVE_LIST = 'RECEIVE_LIST';
-
-export const LOAD_PRICELEVELS = 'LOAD_PRICELEVELS';
-export const LOAD_PRICELEVELS_FAILURE = 'LOAD_PRICELEVELS_FAILURE';
-export const RECEIVE_PRICELEVELS = 'RECEIVE_PRICELEVELS';
-
-export const LOAD_PRICELEVEL = 'LOAD_PRICELEVEL';
-export const LOAD_PRICELEVEL_FAILURE = 'LOAD_PRICELEVEL_FAILURE';
-export const RECEIVE_PRICELEVEL = 'RECEIVE_PRICELEVEL';
-
-export const LOAD_PRICELEVEL_ITEMS = 'LOAD_PRICELEVEL_ITEMS';
-export const LOAD_PRICELEVEL_ITEMS_FAILURE = 'LOAD_PRICELEVEL_ITEMS_FAILURE';
-export const RECEIVE_PRICELEVEL_ITEMS = 'RECEIVE_PRICELEVEL_ITEMS';
-
-export const LOAD_PRICECODE_ITEMS = 'LOAD_PRICECODE_ITEMS';
-export const LOAD_PRICECODE_ITEMS_FAILURE = 'LOAD_PRICECODE_ITEMS_FAILURE';
-export const RECEIVE_PRICECODE_ITEMS = 'RECEIVE_PRICECODE_ITEMS';
-
-export const SAVE_PRICELEVEL = 'SAVE_PRICELEVEL';
-export const SAVE_PRICELEVEL_FAILURE = 'SAVE_PRICELEVEL_FAILURE';
-export const SAVE_PRICELEVEL_SUCCESS = 'SAVE_PRICELEVEL_SUCCESS';
-
-export const LOAD_PRICECODE_LEVELS = 'LOAD_PRICECODE_LEVELS';
-export const LOAD_PRICECODE_LEVELS_FAILURE = 'LOAD_PRICECODE_LEVELS_FAILURE';
-export const RECEIVE_PRICECODE_LEVELS = 'RECEIVE_PRICECODE_LEVELS';
-
-export const LOAD_PRICECODE_CHANGES = 'LOAD_PRICECODE_CHANGES';
-export const LOAD_PRICECODE_CHANGES_FAILURE = 'LOAD_PRICECODE_CHANGES_FAILURE';
-export const RECEIVE_PRICECODE_CHANGES = 'RECEIVE_PRICECODE_CHANGES';
-
-export const LOAD_PRICELEVEL_CHANGES = 'LOAD_PRICELEVEL_CHANGES';
-export const LOAD_PRICELEVEL_CHANGES_FAILURE = 'LOAD_PRICELEVEL_CHANGES_FAILURE';
-export const RECEIVE_PRICELEVEL_CHANGES = 'RECEIVE_PRICELEVEL_CHANGES';
-
-export const setCompany = (company) => ({type: SET_COMPANY, company});
-export const clearError = (index) => ({type: CLEAR_ERROR, index});
 
 const shouldFetchPriceCodes = (state) => {
     return Object.keys(state.priceCodes.list).length === 0 && state.priceCodes.loading === false;
@@ -104,9 +79,9 @@ export const setNewPriceCodeLevelsDiscount = (newDiscountMarkup, priceLevel) => 
 
 export const fetchPriceLevels = () => (dispatch, getState) => {
     dispatch({type: LOAD_PRICELEVELS});
-    const {priceCodes} = getState();
+    const {company} = getState();
     const url = '/node/sales/pricing/:Company/pricelevels'
-        .replace(':Company', encodeURIComponent(priceCodes.company));
+        .replace(':Company', encodeURIComponent(company));
     fetchGET(url)
         .then(res => {
             const levels = {};
@@ -125,7 +100,7 @@ export const fetchPriceCodes = () => (dispatch, getState) => {
     const state = getState();
     if (shouldFetchPriceCodes(state)) {
 
-        const {company} = state.priceCodes;
+        const {company} = state;
 
         dispatch(loadPriceCodes());
         dispatch(fetchPriceLevels());
@@ -152,9 +127,9 @@ export const fetchPriceCodes = () => (dispatch, getState) => {
 };
 
 export const fetchPriceLevel = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
+    const {priceCodes, company} = getState();
     const url = '/node-sage/api/:Company/pricing/pricelevel/:PriceLevel'
-        .replace(':Company', encodeURIComponent(priceCodes.company))
+        .replace(':Company', encodeURIComponent(company))
         .replace(':PriceLevel', encodeURIComponent(priceCodes.priceLevel));
     dispatch(loadPriceLevel());
     fetchGET(url)
@@ -179,13 +154,13 @@ export const fetchPriceLevel = () => (dispatch, getState) => {
 };
 
 export const fetchItems = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
+    const {priceCodes, company} = getState();
     if (!priceCodes.selected) {
         return;
     }
     dispatch(loadItems());
     const url = '/node-sage/api/:Company/pricing/pricecode/:PriceCode/items'
-        .replace(/:Company/g, encodeURIComponent(priceCodes.company))
+        .replace(/:Company/g, encodeURIComponent(company))
         .replace(/:PriceCode/g, encodeURIComponent(priceCodes.selected.PriceCode));
 
     fetchGET(url)
@@ -197,7 +172,7 @@ export const fetchItems = () => (dispatch, getState) => {
         })
 };
 
-export const selectPriceCode = (priceCode) => (dispatch, getState) => {
+export const selectPriceCode = (priceCode) => (dispatch) => {
     dispatch(setPriceCode(priceCode));
     dispatch(fetchItems());
     dispatch(fetchPriceLevelChanges());
@@ -207,12 +182,12 @@ export const selectPriceCode = (priceCode) => (dispatch, getState) => {
 
 
 export const fetchPriceLevelChanges = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
+    const {priceCodes, company} = getState();
     if (!priceCodes.priceLevel) {
         return;
     }
     const url = '/node/sales/pricing/:Company/:PriceLevel'
-        .replace(':Company', encodeURIComponent(priceCodes.company))
+        .replace(':Company', encodeURIComponent(company))
         .replace(':PriceLevel', encodeURIComponent(priceCodes.priceLevel));
     dispatch({type: LOAD_PRICELEVEL_CHANGES});
     fetchGET(url)
@@ -235,12 +210,12 @@ export const fetchPriceLevelChanges = () => (dispatch, getState) => {
 };
 
 export const fetchPriceCodeChanges = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
+    const {priceCodes, company} = getState();
     if (!priceCodes.selected) {
         return;
     }
     const url = '/node/sales/pricing/:Company/pricecode/:PriceCode'
-        .replace(':Company', encodeURIComponent(priceCodes.company))
+        .replace(':Company', encodeURIComponent(company))
         .replace(':PriceCode', encodeURIComponent(priceCodes.selected.PriceCode));
 
     dispatch({type: LOAD_PRICECODE_CHANGES});
@@ -259,8 +234,8 @@ export const fetchPriceCodeChanges = () => (dispatch, getState) => {
 };
 
 export const savePriceLevel = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
-    const {company, selected} = priceCodes;
+    const {priceCodes, company} = getState();
+    const {selected} = priceCodes;
     if (!selected || !selected.CustomerPriceLevel) {
         return;
     }
@@ -283,8 +258,8 @@ export const savePriceLevel = () => (dispatch, getState) => {
 };
 
 export const deletePriceLevel = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
-    const {company, selected} = priceCodes;
+    const {priceCodes, company} = getState();
+    const {selected} = priceCodes;
     if (!selected || !selected.CustomerPriceLevel) {
         return;
     }
@@ -306,14 +281,14 @@ export const deletePriceLevel = () => (dispatch, getState) => {
 
 
 export const fetchPriceCodeLevels = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
+    const {priceCodes, company} = getState();
 
     if (!priceCodes.selected) {
         return;
     }
 
     const url = '/node-sage/api/:Company/pricing/pricecode/:PriceCode/levels'
-        .replace(/:Company/g, encodeURIComponent(priceCodes.company))
+        .replace(/:Company/g, encodeURIComponent(company))
         .replace(/:PriceCode/g, encodeURIComponent(priceCodes.selected.PriceCode));
     dispatch({type: LOAD_PRICECODE_LEVELS});
     fetchGET(url)
@@ -333,8 +308,8 @@ export const fetchPriceCodeLevels = () => (dispatch, getState) => {
 };
 
 export const savePriceCodeChanges = () => (dispatch, getState) => {
-    const {priceCodes} = getState();
-    const {priceCodeLevels, company} = priceCodes;
+    const {priceCodes, company} = getState();
+    const {priceCodeLevels} = priceCodes;
 
     const url = '/node/sales/pricing/:Company'
         .replace(':Company', encodeURIComponent(company));

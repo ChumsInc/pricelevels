@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import classNames from 'classnames';
-import {setTab} from "./actions/AppActions";
+import {clearError, setCompany, setTab} from "./actions/AppActions";
 import {TABS} from "./constants/App";
 import PriceCodes from './components/PriceCodes';
 import ItemPricing from './components/ItemPricing';
 import {fetchPriceCodes} from "./actions/priceCodes";
-
+import PriceCodeChanges from "./components/PriceCodeChanges";
+import DismissableAlert from "./components/DismissableAlert";
 
 class App extends Component {
     static propTypes = {
@@ -16,7 +17,7 @@ class App extends Component {
     };
 
     componentWillMount() {
-        this.props.dispatch(fetchPriceCodes())
+        this.props.dispatch(setCompany())
     }
 
     componentDidMount() {
@@ -31,6 +32,10 @@ class App extends Component {
             return;
         }
         this.props.dispatch(setTab(key));
+    }
+
+    onDismissError(index) {
+        this.props.dispatch(clearError(index));
     }
 
     renderTabs() {
@@ -48,7 +53,14 @@ class App extends Component {
     }
 
     render() {
-        const {tab} = this.props;
+        const {tab, errors} = this.props;
+        const alerts = errors.map((error, index) => {
+            return (
+                <DismissableAlert key={index} message={error} onDismiss={this.onDismissError.bind(this, index)}/>
+            )
+        });
+
+
 
         let content = (
             <div>{tab}</div>
@@ -58,8 +70,10 @@ class App extends Component {
             content = (<PriceCodes />);
             break;
         case TABS.PRICE_LIST.key:
-            content = <ItemPricing />
+            content = (<ItemPricing />);
             break;
+        case TABS.CHANGE_LIST.key:
+            content = (<PriceCodeChanges />);
         }
 
         return (
@@ -67,6 +81,7 @@ class App extends Component {
                 <ul className="nav nav-tabs" role="tablist" id="dl-entry-tabs">
                     {this.renderTabs()}
                 </ul>
+                {alerts}
                 {content}
             </div>
         )
@@ -74,8 +89,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-    const {tab, priceCodes} = state;
-    return {tab, priceCodes};
+    const {tab, priceCodes, errors} = state;
+    return {tab, priceCodes, errors};
 };
 
 export default connect(mapStateToProps)(App);
