@@ -2,7 +2,7 @@ import {PriceCodeSortProps, PriceCodeTableField} from "../ducks/pricing/types";
 import {newDiscountRate, priceCodeKey, priceCodeSort} from "../ducks/pricing/utils";
 import {useAppSelector} from "../app/configureStore";
 import {selectChanges} from "../ducks/pricing";
-import {Alert, pageFilter, Pager, SortableTable, SortProps} from "chums-components";
+import {Alert, pageFilter, Pager, SortableTable, SortProps, TablePagination} from "chums-components";
 import React, {useEffect, useState} from "react";
 import {PriceCodeChange} from "chums-types";
 
@@ -22,28 +22,28 @@ const defaultSort:PriceCodeSortProps = {field: 'PriceCode', ascending: true};
 const UserChangeTable = () => {
     const changes = useAppSelector(selectChanges);
     const [sort, setSort] = useState<PriceCodeSortProps>(defaultSort);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
     const [data, setData] = useState<PriceCodeChange[]>([]);
 
     useEffect(() => {
-        const rows = changes
+        const rows = [...changes]
             .sort(priceCodeSort(sort))
-            .filter(pageFilter(page, rowsPerPage));
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
         setData(rows);
     }, [changes, sort, page, rowsPerPage])
 
     const sortChangeHandler = (sort:SortProps) => {
-        setPage(1);
+        setPage(0);
         setSort(sort as PriceCodeSortProps)
     }
 
     return (
         <div>
-            <SortableTable fields={fields} data={data} currentSort={defaultSort} keyField={row => priceCodeKey(row)}
+            <SortableTable size="xs" fields={fields} data={data} currentSort={defaultSort} keyField={row => priceCodeKey(row)}
                            onChangeSort={sortChangeHandler} />
             {changes.length === 0 && (<Alert color="secondary">No data</Alert>)}
-            <Pager page={page} rowsPerPage={rowsPerPage} dataLength={changes.length} onChangePage={setPage} onChangeRowsPerPage={setRowsPerPage} />
+            <TablePagination page={page} onChangePage={setPage} rowsPerPage={rowsPerPage} onChangeRowsPerPage={setRowsPerPage} count={changes.length} showFirst showLast />
         </div>
         )
 }
