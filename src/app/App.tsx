@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Tab, TabList, TabItem, SessionStore} from 'chums-components';
+import {Tab, TabList, TabItem, SessionStore, ErrorBoundary} from 'chums-components';
 import {useAppDispatch} from "./configureStore";
 import {useSelector} from "react-redux";
 import {
@@ -68,18 +68,20 @@ const App = () => {
         <div>
             <TabList tabs={tabs} currentTabId={tab} onSelectTab={onChangeTab} />
             <div>
-                {tab === tabPriceLevels.id && (
-                    <PriceLevelTabContent />
-                )}
-                {tab === tabPriceList.id && (
-                    <ItemPricingTabContent />
-                )}
-                {tab === tabPriceCodes.id && (
-                    <PriceCodesTabContent />
-                )}
-                {tab === tabChanges.id && (
-                    <UserChangesTabContent />
-                )}
+                <ErrorBoundary>
+                    {tab === tabPriceLevels.id && (
+                        <PriceLevelTabContent />
+                    )}
+                    {tab === tabPriceList.id && (
+                        <ItemPricingTabContent />
+                    )}
+                    {tab === tabPriceCodes.id && (
+                        <PriceCodesTabContent />
+                    )}
+                    {tab === tabChanges.id && (
+                        <UserChangesTabContent />
+                    )}
+                </ErrorBoundary>
             </div>
         </div>
     )
